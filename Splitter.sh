@@ -11,6 +11,7 @@ for run in {0..9..1}; do {
         end=$((${line_nrs[$((${event}+1))]}-1))
         sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat
     }; done
-    #sed -n '(( ${line_nrs[9]}+1 )),$p' > event_9.dat
+    start=$((${line_nrs[${9}]}+1))
+    sed -n ${start},$(sed -n '$=' ${path}/${file})p ${path}/${file} > ${path}/event_9.dat
 
 }; done
