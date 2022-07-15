@@ -15,7 +15,8 @@ for run in {0..9..1}; do {
         sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
     }; done
     wait
-    for (( event=0; event<=$((${restEvents}-1)); event++ )); do {
+    startEvent=$((${#lineNrs[*]}-${restEvents}+1))
+    for (( event=${startEvent}; event<=$((${restEvents}-1)); event++ )); do {
         (start=$((${lineNrs[${event}]}+1))
         end=$((${lineNrs[$((${event}+1))]}-1))
         sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
