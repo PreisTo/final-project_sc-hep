@@ -16,28 +16,33 @@ for run in {0..9..1}; do {
     }; fi
     
     if [[ restEvents -eq 0 ]]; then {
-        for (( event=0; event<$((${#lineNrs[*]})); event++ )); do {
+        for (( event=0; event<$((${#lineNrs[*]}-1)); event++ )); do {
             (start=$((${lineNrs[${event}]}+1))
             end=$((${lineNrs[$((${event}+1))]}-1))
+            
             sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
         }; done
         wait
+        
         sed -n $((${lineNrs[-1]}+1)),$(sed -n '$=' ${path}/${file})p ${path}/${file} > ${path}/event_$((${#lineNrs[*]}-1)).dat
     }
     else {
-        for (( event=0; event<=$((${#lineNrs[*]}-${restEvents})); event++ )); do {
+        for (( event=0; event<$((${#lineNrs[*]}-${restEvents})); event++ )); do {
             (start=$((${lineNrs[${event}]}+1))
             end=$((${lineNrs[$((${event}+1))]}-1))
+            
             sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
         }; done
         wait
-        startEvent=$((${#lineNrs[*]}-${restEvents}+1))
-        for (( event=${startEvent}; event<=$((${restEvents}-1)); event++ )); do {
+        startEvent=$((${#lineNrs[*]}-${restEvents}))
+        for (( event=${startEvent}; event<$((${#lineNrs[*]}-2)); event++ )); do {
             (start=$((${lineNrs[${event}]}+1))
             end=$((${lineNrs[$((${event}+1))]}-1))
+            
             sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
         }; done
         wait
+        
         sed -n $((${lineNrs[-1]}+1)),$(sed -n '$=' ${path}/${file})p ${path}/${file} > ${path}/event_$((${#lineNrs[*]}-1)).dat
     }; fi
 }; done
