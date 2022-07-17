@@ -8,7 +8,6 @@ function ActualFiltering {
     local pwd_original=$PWD;
     local event_counter=0
     cd $path
-    echo "Here"
     while read eventFile; do {
         cp $eventFile backup_${event_counter}.dat
         awk '{if ($3 == 0) print $0}' < backup_${event_counter}.dat 1>event_${event_counter}.dat
@@ -21,10 +20,9 @@ function ActualFiltering {
 function Filtering {
     local numberOfProcesses=$(nproc)
     for run in {0..9..1}; do {
-        ( ActualFiltering $1 $2 )
+        ( ActualFiltering $1 ${run} )
     }; done
     wait
-    echo "Done"
 }
 
 function CheckFilteringAndRemove {
