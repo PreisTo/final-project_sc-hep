@@ -13,9 +13,13 @@ function Transfer2TTree {
   return 0;
 }
 
-function
+function DirectorySweeper {
+  [[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
+  find $1 -type f -not -name "HIJING_LBF_test_small.*" -exec rm {} \;
+  return 0;
+}
 
-[[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
+function ExceTransfer {
 
 NumberOfProcesses=$(nproc)
 
@@ -31,4 +35,8 @@ for (( i = 0; i < 10; i++ )); do {
     NumberOfProcesses=$(nproc)
   }; fi
 }; done
+return 0;
+}
 
+[[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
+ExceTransfer $1 && DirectorySweeper $1 || return 1;
