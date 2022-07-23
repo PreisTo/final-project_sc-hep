@@ -31,7 +31,7 @@ function DirectorySweeper {
 }
 
 function ExceTransfer {
-
+: <<HERE-Document
   NumberOfProcesses=$(nproc)
 
   for (( i = 0; i < 10; i++ )); do {
@@ -57,7 +57,15 @@ function ExceTransfer {
     }; fi
 
   }; done
+HERE-Document
+  for (( i = 0; i < 10; i++ )); do {
 
+    Dir=$1$i/
+
+
+      Transfer2TTree $Dir 1> /dev/null 2> /dev/null
+
+    }; done
   return 0;
 }
 

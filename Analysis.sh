@@ -14,3 +14,5 @@ for (( i = 0; i < 10; i++ )); do ## TODO change run number!!!
 wait;
 mkdir -p figures
 root -l -b -q exportHistos.C\(\"AnalysisResults.root\"\)
+echo "Everything saved in directory \"figures\""
+return 0;
