@@ -1,8 +1,7 @@
-#include<exception>
-
+#include <stdio.h>
 int readDataFromTTree(const char *filename)
 {
-
+ ROOT::EnableImplicitMT();
  TFile *file = new TFile(filename,"update"); // there are a few TTree's in this file, each corresponds to different event
 
  TList *lofk = file->GetListOfKeys(); // standard ROOT stuff, to read all entries in the ROOT file
@@ -11,7 +10,7 @@ int readDataFromTTree(const char *filename)
  for(Int_t i=0; i<lofk->GetEntries(); i++)
  //for(Int_t i=0; i<2; i++)
  {
-  cout<<Form("Analysisng event number %d",i)<<endl;
+  cout<<Form("Analysing event number %d",i)<<endl;
   TTree *tree = (TTree*) file->Get(Form("%s;%d",lofk->At(i)->GetName(),i+1)); // works if TTrees in ROOT file are named 'event;1', 'event;2'. Otherwise, adapt for your case
 
   if(!tree || strcmp(tree->ClassName(),"TTree")) // make sure the pointer is valid, and it points to TTree
@@ -44,34 +43,34 @@ int readDataFromTTree(const char *filename)
   for(Int_t p = 0; p < nParticles; p++) // loop over all particles in a current TTree
   {
    tree->GetEntry(p);
-
-   
+//   printf("\rIn progress %d \n", (p/nParticles)*100);
+//   fflush(stdout); 
    PID=abs(PID);    // antiparticle, particle ... all the same
    if (PID == 211 || PID == 111)
    {
    // Pions
    double pT = TMath::Sqrt(TMath::Power(px,2)+TMath::Power(py,2));  // compute pT
    hist_pT_pion->Fill(pT);
-   hist_pT_pion->Write(hist_pT_pion->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
    }
    else if (PID == 130 || PID == 310 || PID==311 || PID==321)
    {
     // Kaon
     double pT = TMath::Sqrt(TMath::Power(px,2)+TMath::Power(py,2));  // compute pT
     hist_pT_kaon->Fill(pT);
-    hist_pT_kaon->Write(hist_pT_kaon->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
    }
    else if (PID == 2212)
    {
     // Proton
     double pT = TMath::Sqrt(TMath::Power(px,2)+TMath::Power(py,2));  // compute pT
     hist_pT_proton->Fill(pT);
-    hist_pT_proton->Write(hist_pT_proton->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
    }
    
    
 
   }
+  hist_pT_pion->Write(hist_pT_pion->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
+  hist_pT_kaon->Write(hist_pT_kaon->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
+  hist_pT_proton->Write(hist_pT_proton->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
   fileOutput->Close();
   cout<<"Done with this event, marching on...\n"<<endl;
 
