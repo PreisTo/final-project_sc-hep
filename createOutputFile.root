@@ -1,0 +1,6 @@
+int createOutputFile(const char *filename)
+{
+
+TFile *file = new TFile(filename,"update")
+return 0;
+}
