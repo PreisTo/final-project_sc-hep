@@ -1,23 +1,15 @@
 #!/bin/bash
 
-function ExceAnalyser {
-    local Dir=$1;
-    local Run=$2;
-    echo "Analysing output of Run ${Run}"
-    root -l -b -q readDataFromTTree.C\(\"${Dir}${Run}/HIJING_LBF_test_small.root\"\)
-    return 0;
-}
-
-
 [[ -d $1 ]] || return 1;
 [[ ! -f "AnalysisResults.root" ]] || { rm "AnalysisResults.root"; echo "Removing old Analysis file"; }
 root -l -b -q createHistos.C\(\"AnalysisResults.root\"\)
 
 NumberOfProcesses=$(nproc)
 
-for (( Run = 0; Run < 10; Run++ )); do ## TODO change run number!!!
+for (( i = 0; i < 10; i++ )); do ## TODO change run number!!!
 {
-    ExceAnalyser $1 ${Run}
+	echo "Analysing output of Run ${i}";
+	root -l -b -q readDataFromTTree.C\(\"${1}${i}/HIJING_LBF_test_small.root\"\);
 }; done
 wait;
 mkdir -p figures

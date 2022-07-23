@@ -40,7 +40,7 @@ function ExceTransfer {
 
     if [[ NumberOfProcesses -gt 1 ]]; then {
 
-      (Transfer2TTree $Dir) 1> /dev/null
+      (Transfer2TTree $Dir) 1> /dev/null 2> /dev/null
 
       (( NumberOfProcesses-- ))
 
@@ -48,7 +48,7 @@ function ExceTransfer {
 
     else {
 
-      (Transfer2TTree $Dir)
+      (Transfer2TTree $Dir) 1> /dev/null 2> /dev/null
 
       wait && echo "Waiting"
 

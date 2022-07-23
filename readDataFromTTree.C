@@ -64,8 +64,6 @@ int readDataFromTTree(const char *filename)
     double pT = TMath::Sqrt(TMath::Power(px,2)+TMath::Power(py,2));  // compute pT
     hist_pT_proton->Fill(pT);
    }
-   
-   
 
   }
   hist_pT_pion->Write(hist_pT_pion->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
