@@ -24,5 +24,10 @@ int exportHistos(const char *filename)
   C->SaveAs("figures/protons.png");
   C->SaveAs("figures/protons.eps");
   C->SaveAs("figures/protons.C");
+
+  cout<<Form("Average pT for the whole dataset:")<<endl;
+  cout<<Form("o pions\t=\t%f",hist_pT_pion->GetMean())<<endl;
+  cout<<Form("o kaons\t=\t%f",hist_pT_kaon->GetMean())<<endl;
+  cout<<Form("o protons\t=\t%f",hist_pT_proton->GetMean())<<endl;
   return 0;
 }
