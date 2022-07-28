@@ -18,7 +18,7 @@ for run in {0..9..1}; do {
     path="$PWD/$1${run}"
     file="HIJING_LBF_test_small.out"
     lineNrs=( $(grep -n BEGINNINGOFEVENT "${path}/${file}" | awk 'BEGIN {FS=": "} {print $1}') )    # get the line numbers of the beggining of events
-    
+    lineNrs[${#lineNrs[*]}]=$(sed -n '$=' "${path}/${file}")
     if [[ ${#lineNrs[*]} -ge ${numberOfProcesses} ]]; then {    # check if the amount of events is bigger than nproc
         restEvents=$((${#lineNrs[*]}%${numberOfProcesses}));    # get modulo of amount of events % nproc
     }
@@ -32,8 +32,7 @@ for run in {0..9..1}; do {
             end=$((${lineNrs[$((${event}+1))]}-1))
             sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
         }; done
-        wait
-        sed -n $((${lineNrs[-1]}+1)),$(sed -n '$=' ${path}/${file})p ${path}/${file} > ${path}/event_$((${#lineNrs[*]}-1)).dat  # extract for last event
+
     }
     else {
         for (( event=0; event<$((${#lineNrs[*]}-${restEvents})); event++ )); do {   # same as before for the first nproc number of events
@@ -43,12 +42,10 @@ for run in {0..9..1}; do {
         }; done
         wait
         startEvent=$((${#lineNrs[*]}-${restEvents}))    # set next event to the next one to prevent double extracting
-        for (( event=${startEvent}; event<$((${#lineNrs[*]}-2)); event++ )); do {   # and for the rest of the events except the last one
+        for (( event=${startEvent}; event<$((${#lineNrs[*]}-1)); event++ )); do {   # and for the rest of the events except the last one
             (start=$((${lineNrs[${event}]}+1))
             end=$((${lineNrs[$((${event}+1))]}-1))
             sed -n ${start},${end}p ${path}/${file} > ${path}/event_${event}.dat)
         }; done
-        wait
-        sed -n $((${lineNrs[-1]}+1)),$(sed -n '$=' ${path}/${file})p ${path}/${file} > ${path}/event_$((${#lineNrs[*]}-1)).dat  # and of course the last event
     }; fi
 }; done

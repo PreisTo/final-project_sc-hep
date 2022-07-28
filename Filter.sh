@@ -4,7 +4,6 @@
 # Be sensible to nproc
 ############
 
-[[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
 
 function ActualFiltering {
     local path="$PWD/$1$2"
@@ -23,23 +22,41 @@ function ActualFiltering {
 function Filtering {
     local numberOfProcesses=$(nproc)  # not in use yet....
     for run in {0..9..1}; do {
+
+      if [[ $numberOfProcesses > 1 ]]; then
         ( ActualFiltering $1 ${run} )
+        (( numberOfProcesses--))
+      else
+        ( ActualFiltering $1 ${run} )
+        wait
+        numberOfProcesses=$(nproc)
+      fi
     }; done
     wait
 }
 
 function CheckFilteringAndRemove {
-    local testBool=0; # initialize test variable which is set to 1 if one particles is not primary
-    local line;
-    while read line; do {
-        awk '{if ($3 != 0) testBool=1}';  # check each particle
-    if [[ testBool -eq 0 ]]; then {
-        rm backup_$1.dat; # rm backup if test bool indicates no issues
-    }
-    else {
-        echo "Warning: Filtering failed for event $1!" >&2; # Print out an error if failed for a specific file
-    }; fi
-    }; done < event_$1.dat
-    }
 
+  local testBool=0; # initialize test variable which is set to 1 if one particles is not primary
+  local line;
+
+  while read line; do {
+
+      awk '{if ($3 != 0) testBool=1}';  # check each particle
+
+      if [[ testBool -eq 0 ]]; then {
+
+        rm backup_$1.dat; # rm backup if test bool indicates no issues
+
+      }
+      else {
+
+        echo "Warning: Filtering failed for event $1!" >&2; # Print out an error if failed for a specific file
+
+      }; fi
+
+  }; done < event_$1.dat
+}
+
+[[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
 Filtering $1; # run the script
