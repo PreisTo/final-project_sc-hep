@@ -10,3 +10,5 @@ for dir in {0..9..1}; do {
     }; done 2> /dev/null
     rm $PWD/$1$dir/HIJING_LBF_test_small.root
 }; done
+
+rm -r figures/
