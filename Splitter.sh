@@ -11,9 +11,10 @@
 ###
 # Check input syntax
 ###
+numberOfProcesses=$(nproc)
 
 for run in {0..9..1}; do {
-    numberOfProcesses=$(nproc)
+
     path="$PWD/$1${run}"
     file="HIJING_LBF_test_small.out"
     lineNrs=( $(grep -n BEGINNINGOFEVENT "${path}/${file}" | awk 'BEGIN {FS=": "} {print $1}') )    # get the line numbers of the beggining of events
