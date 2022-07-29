@@ -24,11 +24,12 @@ for (( Run = 0; Run < 10; Run++ )); do
 	  numberOfProcesses=$(nproc)
 	fi
 done 2>> log 1>> log
-wait
+wait 1>> log 2>> log
 
 # create a directory for the figures and export them
 mkdir -p figures
 root -l -b -q exportHistos.C\(\"AnalysisResults.root\"\) 2>> log 1>> log
+
 echo "All figures saved in directory \"figures\""
 
 # Print out the mean values
