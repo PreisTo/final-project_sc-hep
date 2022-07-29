@@ -7,6 +7,10 @@ int createHistos(const char *filename)
   hist_pT_pion->Write();
   hist_pT_kaon->Write();
   hist_pT_proton->Write();
+  delete hist_pT_kaon;
+  delete hist_pT_pion;
+  delete hist_pT_proton;
   file->Close();
+  delete file;
   return 0;
 }

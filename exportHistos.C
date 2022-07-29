@@ -25,5 +25,12 @@ int exportHistos(const char *filename)
   C->SaveAs("figures/protons.eps");
   C->SaveAs("figures/protons.C");
 
+  delete C;
+  delete hist_pT_proton;
+  delete hist_pT_pion;
+  delete hist_pT_kaon;
+
+  file->Close();
+  delete file;
   return 0;
 }

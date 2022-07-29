@@ -9,4 +9,9 @@ void printOutMean(const char *filename)
   cout<<Form("o pions\t\t=\t%f",hist_pT_pion->GetMean())<<endl;
   cout<<Form("o kaons\t\t=\t%f",hist_pT_kaon->GetMean())<<endl;
   cout<<Form("o protons\t=\t%f",hist_pT_proton->GetMean())<<endl;
+  delete hist_pT_kaon;
+  delete hist_pT_pion;
+  delete hist_pT_proton;
+  file->Close();
+  delete file;
 }

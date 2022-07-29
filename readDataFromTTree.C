@@ -7,6 +7,16 @@ int readDataFromTTree(const char *filename)
  TList *lofk = file->GetListOfKeys(); // standard ROOT stuff, to read all entries in the ROOT file
  Int_t nr_entries=int(lofk->GetEntries());
  cout<<Form("Total number of keys %d",nr_entries)<<endl;
+
+
+   TFile *fileOutput = TFile::Open("AnalysisResults.root","update"); // open up output file to store histograms
+   // if(!fileOutput){TFile *fileOutput = TFile::Open("AnalysisResults.root","NEW");}  // check if output file exists, otherwise create --- somehow needed, TODO figure out why
+
+  TH1F *hist_pT_pion = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_pion"));
+  TH1F *hist_pT_kaon = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_kaon"));
+  TH1F *hist_pT_proton = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_proton"));
+
+
  for(Int_t i=0; i<lofk->GetEntries(); i++)
  //for(Int_t i=0; i<2; i++)
  {
@@ -33,12 +43,7 @@ int readDataFromTTree(const char *filename)
   tree->SetBranchAddress("E",&E);
   tree->SetBranchAddress("PID",&PID);
 
-  TFile *fileOutput = TFile::Open("AnalysisResults.root","update"); // open up output file to store histograms
- // if(!fileOutput){TFile *fileOutput = TFile::Open("AnalysisResults.root","NEW");}  // check if output file exists, otherwise create --- somehow needed, TODO figure out why
-  
-  TH1F *hist_pT_pion = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_pion"));
-  TH1F *hist_pT_kaon = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_kaon"));
-  TH1F *hist_pT_proton = dynamic_cast<TH1F*>(fileOutput->Get("hist_pT_proton"));
+
 
   for(Int_t p = 0; p < nParticles; p++) // loop over all particles in a current TTree
   {
@@ -66,15 +71,29 @@ int readDataFromTTree(const char *filename)
    }
 
   }
+
+
+
+
+  cout<<"Done with this event, marching on...\n"<<endl;
+
+ }
+
+  // for(Int_t i=0; i<lofk->GetEntries(); i++)
+
   hist_pT_pion->Write(hist_pT_pion->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
   hist_pT_kaon->Write(hist_pT_kaon->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
   hist_pT_proton->Write(hist_pT_proton->GetName(),TObject::kSingleKey+TObject::kWriteDelete);
+
+  // deleting histo, tree and file pointers
+  delete hist_pT_kaon;
+  delete hist_pT_pion;
+  delete hist_pT_proton;
+
   fileOutput->Close();
-  cout<<"Done with this event, marching on...\n"<<endl;
-
- } // for(Int_t i=0; i<lofk->GetEntries(); i++)
+  delete fileOutput;
   file->Close();
-
+  delete file;
 
  return 0;
 }
