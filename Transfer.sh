@@ -12,9 +12,9 @@ function Transfer2TTree {
 
   for File in $Files; do  # iterate over the File array
     root -l -b -q ${CurrentWorkingDir}/importASCIIfileIntoTTree.C\(\"${File}\"\); # execute the root file transfering
-  done
+  done 1>> ${CurrentWorkingDir}/log 2>> ${CurrentWorkingDir}/log
 
-  cd $CurrentWorkingDir;  # change back to the primary working directory
+  cd ${CurrentWorkingDir};  # change back to the primary working directory
 
   return 0;
 }
@@ -30,7 +30,7 @@ function Transfering {
 
       (
       Dir=$1$run/
-      Transfer2TTree $Dir 1> /dev/null 2> /dev/null
+      Transfer2TTree $Dir
       )
 
       (( numberOfProcesses--))
@@ -39,7 +39,7 @@ function Transfering {
 
       (
       Dir=$1$run/
-      Transfer2TTree $Dir 1> /dev/null 2> /dev/null
+      Transfer2TTree $Dir
       )
 
       wait
@@ -47,7 +47,7 @@ function Transfering {
 
     fi;
 
-  done;
+  done; 1>> log 2>> log
 
   return 0;
 }
