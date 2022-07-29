@@ -11,3 +11,5 @@ Final Project for Scientific Computing in High Energy Physics
   - readDataFromTTree.C: read all the events and particles and fill up the histograms
   - exportHistos.C: export the figures from the histos and print out the required average pT infos
 - TheFinalTouch.sh: runs Splitter, Filter, Transfer and Analysis as defined in challenge 5)
+
+All the scripts take the directory of the data as an argument
