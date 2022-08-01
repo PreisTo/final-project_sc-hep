@@ -1,9 +1,5 @@
 #!/bin/bash
 
-### TODOs ###
-# add total number of lines + 1 to array to reduce lines of code needed
-#############
-
 [[ -d $1 ]] || { echo "Not a directory, exiting"; return 1; }   # check if first input is a directory
 
 ###
